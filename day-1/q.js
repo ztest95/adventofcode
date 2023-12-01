@@ -22,39 +22,62 @@ let arrNums2 = []
 function wordsToNum(word) {
     let w = word
     let i = w.search(/[0-9]/)
-    let front = w.slice(0, i)
+    let front = w.slice(0, i+1)
 
-    if (i > 2) {
-        front = front.replaceAll('one', '1')
-        front = front.replaceAll('two', '2')
-        front = front.replaceAll('three', '3')
-        front = front.replaceAll('four', '4')
-        front = front.replaceAll('five', '5')
-        front = front.replaceAll('six', '6')
-        front = front.replaceAll('seven', '7')
-        front = front.replaceAll('eight', '8')
-        front = front.replaceAll('nine', '9')
+    if (front.length > 2) {
+        for (let i = 2; i <= front.length; i++) {
+            let slice = front.slice(i-2, i+1)
+            let slice2 = slice.replace('one', '1e') // added letters at end for edge case like 'twone' = 21
+            slice2 = slice2.replace('two', '2o')
+            slice2 = slice2.replace('six', '6x')
+            front = front.replace(slice, slice2)
+        }
+
+        for (let i = 3; i <= front.length; i++) {
+            let slice = front.slice(i-3, i+1)
+            let slice2 = slice.replace('four', '4r')
+            slice2 = slice2.replace('five', '5e')
+            slice2 = slice2.replace('nine', '9e')
+            front = front.replace(slice, slice2)
+        }
+
+        front = front.replaceAll('three', '3e')
+        front = front.replaceAll('seven', '7n')
+        front = front.replaceAll('eight', '8t')
+        
     }
 
-    let j = w.lastIndexOf(/[0-9]/)
     let back = w.slice(i+1, w.length)
 
     if (back.length > 2) {
-        back = back.replaceAll('one', '1')
-        back = back.replaceAll('two', '2')
+        for (let i = 2; i <= back.length; i++) {
+            let slice = back.slice(i-2, i+1)
+            let slice2 = slice.replace('one', '1e')
+            slice2 = slice2.replace('two', '2o')
+            slice2 = slice2.replace('six', '6x')
+            back = back.replace(slice, slice2)
+        }
+
+        for (let i = 3; i <= back.length; i++) {
+            let slice = back.slice(i-3, i+1)
+            let slice2 = slice.replace('four', '4r')
+            slice2 = slice2.replace('five', '5e')
+            slice2 = slice2.replace('nine', '9e')
+            back = back.replace(slice, slice2)
+        }
+
         back = back.replaceAll('three', '3')
-        back = back.replaceAll('four', '4')
-        back = back.replaceAll('five', '5')
-        back = back.replaceAll('six', '6')
         back = back.replaceAll('seven', '7')
         back = back.replaceAll('eight', '8')
-        back = back.replaceAll('nine', '9')
+        
     }
 
-    return front + w[i] + w[j] + back
+
+    return front + back
 }
 for (let i in arrWords) {
     w = wordsToNum(arrWords[i])
+    console.log(`${arrWords[i]} = ${w}`)
     arrNums2[i] = w.replace(/[^0-9]/g, '') 
 }
 let sum2 = 0
