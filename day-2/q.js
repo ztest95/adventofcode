@@ -15,7 +15,6 @@ for (let i in arrGames) {
     //  '1 blue, 1 red; 2 blue, 2 red; 3 blue, 3 red']
 }
 
-arrGames = arrGames.slice(13, 14)
 for (let i in arrGames) {
     // arrGames[i] = '1 blue, 1 red; 2 blue, 2 red; 3 blue, 3 red'
     let matches = arrGames[i].split(';')
@@ -78,11 +77,12 @@ for (let matches in arrGames) {
 
     }
 
-    if (possible = true) {
+    if (possible) {
         sum_of_possible = sum_of_possible + 1 + parseInt(matches)
     }
     
 }
+console.log(sum_of_possible)
 
 
 // [ //Games
@@ -105,8 +105,29 @@ for (let matches in arrGames) {
 
 
 // part 2
+sum_of_power = 0
+for (let matches in arrGames) {
+    matches = parseInt(matches)
+    let red = 0
+    let green = 0
+    let blue = 0
 
+    for (let draws in arrGames[matches]) {
+        draws = parseInt(draws)
 
+        if (arrGames[matches][draws][0] > red) {
+            red = arrGames[matches][draws][0]
+        }  
+        if (arrGames[matches][draws][1] > green) {
+            green = arrGames[matches][draws][1]
+        } 
+        if (arrGames[matches][draws][2] > blue) { 
+            blue = arrGames[matches][draws][2]
+        } 
+    }
+    sum_of_power = sum_of_power + (red * blue * green )
+}
+console.log(sum_of_power)
 // References
 // ChatGPT for RegEx (.replace(/.*:/, ""))
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator
