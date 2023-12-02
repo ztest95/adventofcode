@@ -1,82 +1,114 @@
+// part 1
+// This took me like 6 hours man
+
 let input = document.querySelector('pre').innerText
 let arrGames = input.split('\n')
 arrGames = arrGames.slice(0, arrGames.length -1)
-// ['Game1',
-//  'Game2',
-//  'Game3']
+// ['Game1: qweqwe',
+//  'Game2: qweqwe',
+//  'Game3: qweqwe']
 
 sum_of_possible = 0
-let matches = []
 for (let i in arrGames) {
-    matches[i] = arrGames[i].replace(/.*:/, "")
+    arrGames[i] = arrGames[i].replace(/.*:/, "")
+    // ['1 blue, 1 red; 2 blue, 2 red; 3 blue, 3 red',
+    //  '1 blue, 1 red; 2 blue, 2 red; 3 blue, 3 red']
 }
-for (let i in arrGames) {
-    // Array containing each match of a game
-    let matches = arrGames[i].replace(/.*:/, "") // removes Game number label
-    // ['1 blue, 1 red; 2 blue, 2 red']
-    for (let j in matches) { 
-        let dict = {}
-        let draws = matches.split(';')
-        // ['1 blue, 1 red',
-        //  '2 blue, 2 red']
-        for (let ball of draws[j]) {
 
+arrGames = arrGames.slice(13, 14)
+for (let i in arrGames) {
+    // arrGames[i] = '1 blue, 1 red; 2 blue, 2 red; 3 blue, 3 red'
+    let matches = arrGames[i].split(';')
+    // ['1 blue, 1 red', '2 blue, 2 red', '3 blue, 3 red]
+    let dict = {
+        0: 0,
+        1: 0,
+        2: 0
+    }
+
+    for (let draw in matches) {
+        // matches[draw] = '1 blue, 1 red'
+        // or arrGames[i][draw]
+        let dictarr = []
+        let pick = matches[draw].split(',')
+        // Array ['1 blue', '1 red'] 
+        // replace(/[^0-9]/, '')
+        for (let item in pick) {
+
+            // pick[item] = '1 blue'
+            let n = pick[item].replace(/[^0-9]/g, '')
+            n = parseInt(n)
+            if (pick[item].includes('red')) {
+                dict[0] = n
+            }
+            if (pick[item].includes('green')) {
+                dict[1] = n
+            }
+            if (pick[item].includes('blue')) {
+                dict[2] = n
+            }
+ 
+            dictarr[item] = dict
+            
         }
-        for (let draw of draws) {
-            let n = draw.replace(/[^0-9]/, '')
-            dict['r'] = draw.includes('red') ? parseInt(n) : 0
-            dict['g'] = draw.includes('green') ? parseInt(n) : 0
-            dict['b'] = draw.includes('blue') ? parseInt(n) : 0
-        }
-        matches[j] = dict
-        // [{ 'b' : int, 'r': int, 'g': int },
-        //  { 'b' : int, 'r': int, 'g': int }]
-        if (matches[j]['r'] > 12) {
-            break
-        }
-        if (matches[j]['g'] > 13) {
-            break
-        }
-        if (matches[j]['r'] > 14) {
-            break
-        }
-        // if nothing is above the limit
+        // After it goes through a match (multiple picks / draw)
+        matches[draw] = values(dict)
+        dictarr = []
+    }
+    arrGames[i] = matches
+}
+
+for (let matches in arrGames) {
+    matches = parseInt(matches)
+    let possible = true
+
+    for (let draws in arrGames[matches]) {
+        draws = parseInt(draws)
+
+        if (arrGames[matches][draws][0] > 12) {
+            possible = false
+        }  
+        if (arrGames[matches][draws][1] > 13) {
+            possible = false
+        } 
         
-    }
-    sum_of_possible =  sum_of_possible + parseInt(i) + 1
-}
-console.log(sum_of_possible)
+        if (arrGames[matches][draws][2] > 14) { 
+            possible = false
+        } 
 
-
-let games = {
-    'Game1': {
-        'Match1': {
-            'blue': 9,
-            'red': 8
-        },
-        'Match2': {
-            'blue': 2,
-            'red': 7
-        },
-        'Match3': {
-            'blue': 1,
-            'red': 12
-        }
-    },
-    'Game2': {
-        'Match1': {
-            'blue': 9,
-            'red': 8
-        },
-        'Match2': {
-            'blue': 2,
-            'red': 7
-        },
-        'Match3': {
-            'blue': 1,
-            'red': 12
-        }
     }
+
+    if (possible = true) {
+        sum_of_possible = sum_of_possible + 1 + parseInt(matches)
+    }
+    
 }
 
-console.log(games.Game1)
+
+// [ //Games
+//     [ //Matches
+//         { // Draw
+//             'r': 0,
+//             'g': 0,
+//             'b': 0
+//         },
+//         { // Draw
+//             'r': 0,
+//             'g': 0,
+//             'b': 0
+//         }
+//     ],
+//     [
+//         // Match 2
+//     ]
+// ]
+
+
+// part 2
+
+
+// References
+// ChatGPT for RegEx (.replace(/.*:/, ""))
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Conditional_operator
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Loops_and_iteration
+// https://www.geeksforgeeks.org/how-to-replace-multiple-spaces-with-single-space-in-javascript/
