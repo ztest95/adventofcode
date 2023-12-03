@@ -27,23 +27,23 @@ function wordsToNum(word) {
     if (front.length > 2) {
         for (let i = 2; i <= front.length; i++) {
             let slice = front.slice(i-2, i+1)
-            let slice2 = slice.replace('one', '1e') // added letters at end for edge case like 'twone' = 21
-            slice2 = slice2.replace('two', '2o')
-            slice2 = slice2.replace('six', '6x')
+            let slice2 = slice.replace('one', 'o1ne') // added letters at end for edge case like 'twone' = 21
+            slice2 = slice2.replace('two', 't2wo')
+            slice2 = slice2.replace('six', 's6ix')
             front = front.replace(slice, slice2)
         }
 
         for (let i = 3; i <= front.length; i++) {
             let slice = front.slice(i-3, i+1)
-            let slice2 = slice.replace('four', '4r')
-            slice2 = slice2.replace('five', '5e')
-            slice2 = slice2.replace('nine', '9e')
+            let slice2 = slice.replace('four', 'fo4ur')
+            slice2 = slice2.replace('five', 'fi5ve')
+            slice2 = slice2.replace('nine', 'ni9ne')
             front = front.replace(slice, slice2)
         }
 
-        front = front.replaceAll('three', '3e')
-        front = front.replaceAll('seven', '7n')
-        front = front.replaceAll('eight', '8t')
+        front = front.replaceAll('three', 't3hree')
+        front = front.replaceAll('seven', 'se7ven')
+        front = front.replaceAll('eight', 'ei8ght')
         
     }
 
@@ -52,23 +52,23 @@ function wordsToNum(word) {
     if (back.length > 2) {
         for (let i = 2; i <= back.length; i++) {
             let slice = back.slice(i-2, i+1)
-            let slice2 = slice.replace('one', '1e')
-            slice2 = slice2.replace('two', '2o')
-            slice2 = slice2.replace('six', '6x')
-            back = back.replace(slice, slice2)
+            let slice2 = slice.replaceAll('one', 'o1ne')
+            slice2 = slice2.replaceAll('two', 't2wo')
+            slice2 = slice2.replaceAll('six', 's6ix')
+            back = back.replaceAll(slice, slice2)
         }
 
         for (let i = 3; i <= back.length; i++) {
             let slice = back.slice(i-3, i+1)
-            let slice2 = slice.replace('four', '4r')
-            slice2 = slice2.replace('five', '5e')
-            slice2 = slice2.replace('nine', '9e')
-            back = back.replace(slice, slice2)
+            let slice2 = slice.replaceAll('four', 'f4our')
+            slice2 = slice2.replaceAll('five', 'f5ive')
+            slice2 = slice2.replaceAll('nine', 'n9ine')
+            back = back.replaceAll(slice, slice2)
         }
 
-        back = back.replaceAll('three', '3')
-        back = back.replaceAll('seven', '7')
-        back = back.replaceAll('eight', '8')
+        back = back.replaceAll('three', 't3hree')
+        back = back.replaceAll('seven', 's7even')
+        back = back.replaceAll('eight', 'e8ight')
         
     }
 
