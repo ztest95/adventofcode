@@ -65,6 +65,18 @@ if __name__ == "__main__":
 
     sums = 0
 
+    symbols_map = {
+            0: [],
+            1: [],
+            2: [],
+            3: [],
+            4: [],
+            5: [],
+            6: []
+        }
+    
+    symbol_coords = []
+
     new_lines = []
 
     with open("day-3/q.txt") as f:
@@ -94,6 +106,18 @@ if __name__ == "__main__":
                     # Append the coordinates of the symbol to the key
                     # that corresponds to the number of digits beside them in each line
                     # Their key can not exceed 2 yet
+                    for x in range(len(before_currline[1])):
+                        symbol_coords.append([i, j])
+
+                    for x in range(len(the_currline[1])):
+                        symbol_coords.append([i, j])    
+
+                    for x in range(len(after_currline[1])):
+                        symbol_coords.append([i, j])
+
+                    # symbols_map[len(before_currline[1])].append([i, j])
+                    # symbols_map[len(the_currline[1])].append([i, j])
+                    # symbols_map[len(after_currline[1])].append([i, j])
 
                     sums += sum(before_currline[1]) + sum(the_currline[1]) + sum(after_currline[1])
 
@@ -101,8 +125,42 @@ if __name__ == "__main__":
 
             i += 1
 
-    print(sums)
+        print(sums)
 
+        print(symbol_coords)
+
+        symbols_map = {}
+        for pair in symbol_coords:
+            # Count the number of occurrences of the pair
+            count = symbol_coords.count(pair)
+            # If the count is not already a key in the dictionary, add it with the pair as the first item in the list
+            if count not in symbols_map.keys():
+                symbols_map[count] = [pair]
+            # If the count is already a key in the dictionary, append the pair to the list
+            elif pair not in symbols_map[count]:
+                symbols_map[count].append(pair)
+
+        two_gears = symbols_map[2]
+        
+        product = 0
+        from math import prod
+        for cord in two_gears:
+            item = lines[cord[0]][cord[1]]
+            values = []
+            if item in symbols:
+                if cord[0] > 0:
+                    values.append(prod(check_line_for_digits(cord[1], lines[cord[0]-1])[1]))
+                values.append(prod(check_currentline_for_digits(cord[1], lines[cord[0]])[1]))
+                if cord[0] < len(lines) - 1:
+                    values.append(prod(check_line_for_digits(cord[1], lines[cord[0]+1])[1]))
+                print(values)
+                product += prod(values)
+            else:
+                print(cord)
+                print('not a symbol')
+        
+        print(product)
+        
 ## How the solution works
 # 1. Scan each line for symbols
 # 2. If symbol is found, scan around the symbol
