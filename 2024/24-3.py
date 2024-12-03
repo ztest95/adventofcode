@@ -4,7 +4,7 @@ def solve_star_1(input: list[str]) -> int:
     
     all_matches = []
     for line_index in  range(len(input)):
-        regex = "mul\((\d*\,\d*)\)"
+        regex = r"mul\((\d*\,\d*)\)"
         matches = re.findall(regex, input[line_index])
 
         all_matches = all_matches + matches
@@ -24,7 +24,7 @@ def solve_star_1(input: list[str]) -> int:
 def solve_star_2(input: list[str]) -> int:
     all_matches = []
     for line_index in  range(len(input)):
-        regex = "mul\(\d*\,\d*\)|do\(\)|don\'t\(\)"
+        regex = r"mul\(\d*\,\d*\)|do\(\)|don\'t\(\)"
         matches = re.findall(regex, input[line_index])
         # print(matches)
         all_matches = all_matches + matches
