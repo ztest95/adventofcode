@@ -22,7 +22,31 @@ def solve_star_1(input: list[str]) -> int:
 
 
 def solve_star_2(input: list[str]) -> int:
+    all_matches = []
+    for line_index in  range(len(input)):
+        regex = "mul\(\d*\,\d*\)|do\(\)|don\'t\(\)"
+        matches = re.findall(regex, input[line_index])
+        # print(matches)
+        all_matches = all_matches + matches
+    
+    muls = []
+    do = True
+    for ele in all_matches:
+        if ele == "do()":
+            do = True
+            continue
+        elif ele == "don't()":
+            do = False
+            continue
+        elif ele.startswith("mul") and do:
+            q = ele.strip("mul(").strip(")")
+            a, b = map(int, q.split(","))
+            muls.append(a * b)
+
     res = 0
+    for i in range(len(muls)):
+        res += muls[i]
+
     return res
 
 if __name__ == "__main__":
@@ -32,3 +56,7 @@ if __name__ == "__main__":
 
     print(solve_star_1(input))
     print(solve_star_2(input))
+
+
+# https://regex101.com/
+# https://www.geeksforgeeks.org/write-regular-expressions/
