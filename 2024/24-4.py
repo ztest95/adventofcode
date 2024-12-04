@@ -1,5 +1,3 @@
-import re
-
 def solve_star_1(input: list[str]) -> int:
     res = 0
 
@@ -7,14 +5,14 @@ def solve_star_1(input: list[str]) -> int:
     for row_idx in range(len(input)):
         count = re.findall(r'XMAS', input[row_idx])
         res += len(count)
-    print("Horizontal-Right: ", res)
+    # print("Horizontal-Right: ", res)
 
     # COUNT ALL HORIZONTAL -> LEFTWARD
     reversed_input = [line[::-1] for line in input]
     for row_idx in range(len(input)):
         count = re.findall(r'XMAS', reversed_input[row_idx])
         res += len(count)
-    print("Horizontal-Left: ", res)
+    # print("Horizontal-Left: ", res)
 
     shifted_list = []
     new = input.copy()
@@ -33,8 +31,7 @@ def solve_star_1(input: list[str]) -> int:
         count_right = re.findall(r'XMAS', shifted_list[row_idx])
         count_left = re.findall(r'XMAS', shifted_list[row_idx][::-1])
         res += len(count_right) + len(count_left)
-    print("Vertical: ", res)
-
+    # print("Vertical: ", res)
 
     # Convert List to Diagonal
 
@@ -56,8 +53,8 @@ def solve_star_1(input: list[str]) -> int:
         count_right = re.findall(r'XMAS', diagonal_list[row_idx])
         count_left = re.findall(r'XMAS', diagonal_list[row_idx][::-1])
         res += len(count_right) + len(count_left)
-    print("Bottom Left to Top Right: ", res)
-    print(res)
+    # print("Bottom Left to Top Right: ", res)
+    
     reverse = []
     for i in range(len(shifted_list)):
         reverse.append(shifted_list[i][::-1])
@@ -75,13 +72,8 @@ def solve_star_1(input: list[str]) -> int:
         count_right = re.findall(r'XMAS', diagonal_list_2[row_idx])
         count_left = re.findall(r'XMAS', diagonal_list_2[row_idx][::-1])
         res += len(count_right) + len(count_left)
+    # print("Bottom Right to Top Left: ", res)
 
-    
-
-    print("Bottom Right to Top Left: ", res)
-
-    print(diagonal_list)
-    print(diagonal_list_2)
     return res
 
 def solve_star_2(input: list[str]) -> int:
@@ -106,3 +98,5 @@ if __name__ == "__main__":
     print(solve_star_1(input))
     print(solve_star_2(input))
 
+# References:
+# AoC 2023/day/3 
