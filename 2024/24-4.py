@@ -86,6 +86,16 @@ def solve_star_1(input: list[str]) -> int:
 
 def solve_star_2(input: list[str]) -> int:
     res = 0
+
+    for i, current_line in enumerate(input):
+
+        for a in range(len(current_line)):
+            if current_line[a] == 'A' and (a != 0 and a != len(current_line.strip('\n'))-1) and (i != 0 and i < len(input)-1):
+                around_1 = input[i-1][a-1] + 'A' + input[i+1][a+1]
+                around_2 = input[i-1][a+1] + 'A' + input[i+1][a-1]
+                
+                if around_1 in ('MAS', 'SAM') and around_2 in ('MAS', 'SAM'):
+                    res += 1
     return res
 
 if __name__ == "__main__":
@@ -94,5 +104,5 @@ if __name__ == "__main__":
         input = [line for line in f.readlines()]
 
     print(solve_star_1(input))
-    # print(solve_star_2(input))
+    print(solve_star_2(input))
 
