@@ -56,7 +56,52 @@ def calc_displacement(coord1: tuple[int, int], coord2: tuple[int, int]) -> tuple
 
 
 def solve_star_2(input: list[str]) -> int:
+    # jsut repeat calc until its out of bounds
     res = 0
+    allowed_chars = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+
+    antennae = {}
+    # creating map
+    for y in range(len(input)):
+        for j in range(len(input[y])):
+            if input[y][j] in allowed_chars:
+                coord = (y, j)
+                if input[y][j] not in antennae:
+                    antennae[input[y][j]] = []
+                
+                antennae[input[y][j]].append(coord)
+
+    cols = len(input[0])
+    rows = len(input)
+
+    anti_nodes = set()
+    for key in antennae:
+        for i in range(len(antennae[key])):
+            
+            for j in range(i + 1, len(antennae[key])):
+                coord_1 = antennae[key][i]
+                coord_2 = antennae[key][j]
+                # add antennae to anti nodes
+                anti_nodes.add(coord_1)
+                anti_nodes.add(coord_2)
+
+                displacement = calc_displacement(coord_1, coord_2)
+                
+                # anti node
+                an_1 = (coord_1[0] - displacement[0], coord_1[1] - displacement[1])
+                an_2 = (coord_2[0] + displacement[0], coord_2[1] + displacement[1])
+                
+                # check if anti node is out of bounds
+                while an_1[0] >= 0 and an_1[1] >= 0 and an_1[0] < rows and an_1[1] < cols:
+                    anti_nodes.add(an_1)
+                    an_1 = (an_1[0] - displacement[0], an_1[1] - displacement[1])
+                    
+
+                while an_2[0] >= 0 and an_2[1] >= 0 and an_2[0] < rows and an_2[1] < cols:
+                    anti_nodes.add(an_2)
+                    an_2 = (an_2[0] + displacement[0], an_2[1] + displacement[1])
+
+    res = len(anti_nodes) 
 
     return res
 
