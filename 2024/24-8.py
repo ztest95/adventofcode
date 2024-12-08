@@ -9,23 +9,23 @@ def solve_star_1(input: list[str]) -> int:
     #      +1 to count
 
     res = 0
-    allowed_chars = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+    ALLOWED_CHARS = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+    COLS = len(input[0]) # get the number of rows and columns for checking out of bounds
+    ROWS = len(input)
 
     antennae = {}
     # creating map
+    # { 'char': [(x1, y1), (x2, y2), ...] }
     for y in range(len(input)):
         for j in range(len(input[y])):
-            if input[y][j] in allowed_chars:
+            if input[y][j] in ALLOWED_CHARS:
                 coord = (y, j)
                 if input[y][j] not in antennae:
                     antennae[input[y][j]] = []
                 
                 antennae[input[y][j]].append(coord)
 
-    cols = len(input[0])
-    rows = len(input)
-
-    anti_nodes = set()
+    anti_nodes = set() # set to store unique anti nodes coordinates
     for key in antennae:
         for i in range(len(antennae[key])):
             
@@ -35,20 +35,20 @@ def solve_star_1(input: list[str]) -> int:
 
                 displacement = calc_displacement(coord_1, coord_2)
                 
-                # anti node
+                # anti node coordinates
                 an_1 = (coord_1[0] - displacement[0], coord_1[1] - displacement[1])
                 an_2 = (coord_2[0] + displacement[0], coord_2[1] + displacement[1])
                 
 
                 # check if anti node is out of bounds
-                if an_1[0] >= 0 and an_1[1] >= 0 and an_1[0] < rows and an_1[1] < cols:
+                if an_1[0] >= 0 and an_1[1] >= 0 and an_1[0] < ROWS and an_1[1] < COLS:
                     anti_nodes.add(an_1)
 
-                if an_2[0] >= 0 and an_2[1] >= 0 and an_2[0] < rows and an_2[1] < cols:
+                if an_2[0] >= 0 and an_2[1] >= 0 and an_2[0] < ROWS and an_2[1] < COLS:
                     anti_nodes.add(an_2)
 
     res = len(anti_nodes)
-    return len(set(anti_nodes))
+    return res
 
 
 def calc_displacement(coord1: tuple[int, int], coord2: tuple[int, int]) -> tuple[int, int]:
@@ -56,23 +56,23 @@ def calc_displacement(coord1: tuple[int, int], coord2: tuple[int, int]) -> tuple
 
 
 def solve_star_2(input: list[str]) -> int:
-    # jsut repeat calc until its out of bounds
+    # for part 2, we just need to repeat subtracting / adding the displacement to the coordinates
+    # we also need to add the coordinates of antennae to the anti nodes
     res = 0
-    allowed_chars = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+
+    ALLOWED_CHARS = set('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
+    COLS = len(input[0])
+    ROWS = len(input)
 
     antennae = {}
-    # creating map
     for y in range(len(input)):
         for j in range(len(input[y])):
-            if input[y][j] in allowed_chars:
+            if input[y][j] in ALLOWED_CHARS:
                 coord = (y, j)
                 if input[y][j] not in antennae:
                     antennae[input[y][j]] = []
                 
                 antennae[input[y][j]].append(coord)
-
-    cols = len(input[0])
-    rows = len(input)
 
     anti_nodes = set()
     for key in antennae:
@@ -81,23 +81,25 @@ def solve_star_2(input: list[str]) -> int:
             for j in range(i + 1, len(antennae[key])):
                 coord_1 = antennae[key][i]
                 coord_2 = antennae[key][j]
+                
                 # add antennae to anti nodes
                 anti_nodes.add(coord_1)
                 anti_nodes.add(coord_2)
 
                 displacement = calc_displacement(coord_1, coord_2)
                 
-                # anti node
                 an_1 = (coord_1[0] - displacement[0], coord_1[1] - displacement[1])
                 an_2 = (coord_2[0] + displacement[0], coord_2[1] + displacement[1])
                 
-                # check if anti node is out of bounds
-                while an_1[0] >= 0 and an_1[1] >= 0 and an_1[0] < rows and an_1[1] < cols:
+                # convert the if statements to while loops
+                
+                # repeat subtracting displacement to the lower coordinate
+                while an_1[0] >= 0 and an_1[1] >= 0 and an_1[0] < ROWS and an_1[1] < COLS:
                     anti_nodes.add(an_1)
                     an_1 = (an_1[0] - displacement[0], an_1[1] - displacement[1])
                     
-
-                while an_2[0] >= 0 and an_2[1] >= 0 and an_2[0] < rows and an_2[1] < cols:
+                # repeat adding displacement to the higher coordinate
+                while an_2[0] >= 0 and an_2[1] >= 0 and an_2[0] < ROWS and an_2[1] < COLS:
                     anti_nodes.add(an_2)
                     an_2 = (an_2[0] + displacement[0], an_2[1] + displacement[1])
 
