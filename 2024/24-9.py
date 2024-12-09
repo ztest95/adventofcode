@@ -1,8 +1,10 @@
 def solve_star_1(input: list[str]) -> int:
+    # two pointer solution
+    # when an empty block is found, swap it with the furthest non-empty block
+
     res = 0
 
     disk_map = input[0]
-    # print(disk_map)
 
     # parsing disk map
     parsed_disk_map = []
@@ -16,8 +18,7 @@ def solve_star_1(input: list[str]) -> int:
         else:
             for j in range(val):
                 parsed_disk_map.append('.')
-            
-    # print(parsed_disk_map)
+    
     sorted_disk_map = parsed_disk_map.copy()
 
     # sorting
@@ -34,8 +35,8 @@ def solve_star_1(input: list[str]) -> int:
         
         if i >= last:
             break
-    # print("".join(sorted_disk_map))
-    sorted_disk_map = "00992111777.44.333....5555.6666.....8888.."
+    
+    # calculating results
     for i in range(len(sorted_disk_map)):
         if sorted_disk_map[i] != '.':
             res += i * int(sorted_disk_map[i])
@@ -49,9 +50,9 @@ def solve_star_2(input: list[str]) -> int:
     res = 0
 
     disk_map = input[0]
-    # print(disk_map)
 
     # parsing disk map
+    # this part is changed from part 1 solution
     id_mapped_disk_map = []
     id = 0
     for i in range(len(disk_map)):
@@ -62,47 +63,41 @@ def solve_star_2(input: list[str]) -> int:
         else:
             id_mapped_disk_map.append((None, val))
             
-    # print(parsed_disk_map)
-    # print('asd')
-    print(id_mapped_disk_map)
+
     i = 0
     l = len(id_mapped_disk_map)
+    # we update i and l every iteration because we are messing with list num
     while i < l: 
-        # print('iter', i)
         if id_mapped_disk_map[i][0] == None:
-            # print("found none", i)
             filled = False
             j = len(id_mapped_disk_map) - 1
             while not filled and j > i:
-                # fi its not an empty block
+                # if i its not an empty block
                 if id_mapped_disk_map[j][0] != None and id_mapped_disk_map[j][1] > 0:
+                    # sourrce block size is equal to target block size
                     if id_mapped_disk_map[j][1] == id_mapped_disk_map[i][1]:
-                        # print('swapping', id_mapped_disk_map[i], id_mapped_disk_map[j])
+                        # just swap
                         id_mapped_disk_map[i], id_mapped_disk_map[j] = id_mapped_disk_map[j], id_mapped_disk_map[i]
-                        # print(id_mapped_disk_map)
                         filled = True
+
+                    # if source block is bigger than the target block (ex. block "..." being replaced by 99)
                     elif id_mapped_disk_map[j][1] < id_mapped_disk_map[i][1]:
-                        # print('subtracting', id_mapped_disk_map[i], id_mapped_disk_map[j])
-                        
                         # create temp vars
                         i_temp = (id_mapped_disk_map[i][0], id_mapped_disk_map[i][1])
                         j_temp = (id_mapped_disk_map[j][0], id_mapped_disk_map[j][1])
-
-                        # print('before', id_mapped_disk_map)
+                        # add new block in front of empty
                         id_mapped_disk_map.insert(i, (j_temp[0], j_temp[1]))
-                        # print('after', id_mapped_disk_map)
-
+                        # subtract count of empty block
                         id_mapped_disk_map[i+1] = (None, i_temp[1] - j_temp[1]) 
-                        # remove the block
+                        # empty the source block
                         id_mapped_disk_map[j+1] = (None, j_temp[1])
-                        # print('after after', id_mapped_disk_map)
-                        # move in front of empty block
                         
                         filled = True
-                j -= 1
+                j -= 1 # move to the left
         i += 1
         l = len(id_mapped_disk_map)
 
+    # parsing the sorted disk map
     parsed_disk_map = []
     for i in range(len(id_mapped_disk_map)):
         if id_mapped_disk_map[i][0] != None:
@@ -112,13 +107,11 @@ def solve_star_2(input: list[str]) -> int:
             for j in range(id_mapped_disk_map[i][1]):
                 parsed_disk_map.append('.')
 
-    print("".join(parsed_disk_map))
+    # calcuating the result
     for i in range(len(parsed_disk_map)):
         if parsed_disk_map[i] != '.':
             res += i * int(parsed_disk_map[i])
 
-
-    print(id_mapped_disk_map)
 
     return res  
 
