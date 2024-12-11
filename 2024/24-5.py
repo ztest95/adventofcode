@@ -35,7 +35,7 @@ def solve_star_1(input: list[str]) -> int:
         rules.append((a, b))
         nums.add(a)
         nums.add(b)
-    
+    # asdasdasdasdasd
     nums = list(nums)
     for num in nums:
         start_nodes.append(Node(num))
