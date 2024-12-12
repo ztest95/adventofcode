@@ -133,68 +133,85 @@ def solve_star_2(input: list[str]) -> int:
                 new_set = new_set.union(find_region(new_set, (x, y), input))
                 regions[char] = [new_set]
 
+
+    for key, value in regions.items():
+        for i in range(len(value)):
+            regions[key][i] = sorted(value[i], key=lambda coord: (coord[0], coord[1]))
+
     res = 0 # total fencing
     for key, value in regions.items():
         print(key, value)
         for set_idx in range(len(value)):
             v_set = set()
             h_set = set()
+            hh_set = set()
+            vv_set = set()
             fences = 0
             for coord in value[set_idx]:
                 x, y = coord[0], coord[1]
                 char = input[x][y]
                 print(coord)
+                z = v_set.union(vv_set)
 
                 if x-1 < 0 or input[x-1][y] != char:
-                    # print('top is not same')
-                    if f"({x}{y-1})-({x-1}{y-1})" in v_set or f"({x}{y+1})-({x-1}{y+1})" in v_set:
+                    # print('top is not same')                    
+                    if f"({x}{y-1})-({x-1}{y-1})" in z or f"({x}{y+1})-({x-1}{y+1})" in z:
+                        # print('top', v_set.union(vv_set))
+                        # print('top', v_set)
                         # print('top', v_set)
                         # print('skipping', f"({x}{y-1})-({x-1}{y-1})", f"({x}{y+1})-({x-1}{y+1})")
-                        # v_set.add(f"({x}{y})-({x-1}{y})")
+                        vv_set.add(f"({x}{y})-({x-1}{y})")
                         pass
                     else:
                         v_set.add(f"({x}{y})-({x-1}{y})")
                         fences += 1
                 if y+1 > len(input[0]) - 1 or  input[x][y+1] != char:
                     # print('right is not same')
-                    if f"({x-1}{y})-({x-1}{y+1})" in h_set or f"({x+1}{y})-({x+1}{y+1})" in h_set:
+                    if f"({x-1}{y})-({x-1}{y+1})" in h_set.union(hh_set) or f"({x+1}{y})-({x+1}{y+1})" in h_set.union(hh_set):
                         # print('right', h_set)
-                        # h_set.add(f"({x}{y})-({x}{y+1})")
+                        hh_set.add(f"({x}{y})-({x}{y+1})")
                         pass
                     else:
                         h_set.add(f"({x}{y})-({x}{y+1})")
                         fences += 1
                 if x+1 > len(input) - 1 or  input[x+1][y] != char:
                     # print('bottom is not same')
-                    if f"({x}{y+1})-({x+1}{y+1})" in v_set or f"({x}{y-1})-({x+1}{y-1})" in v_set:
+                    if f"({x}{y+1})-({x+1}{y+1})" in z or f"({x}{y-1})-({x+1}{y-1})" in z:
                         # print('bottom', v_set)
                         # print('skipping', f"({x}{y+1})-({x+1}{y+1})", f"({x}{y-1})-({x+1}{y-1})")
-                        # v_set.add(f"({x}{y})-({x+1}{y})")
+                        vv_set.add(f"({x}{y})-({x+1}{y})")
                         pass
                     else:
                         v_set.add(f"({x}{y})-({x+1}{y})")
                         fences += 1
                 if y-1 < 0 or input[x][y-1] != char:
                     # print('left is not same')
-                    if f"({x+1}{y})-({x+1}{y-1})" in h_set or f"({x-1}{y})-({x-1}{y-1})" in h_set:
+                    if f"({x+1}{y})-({x+1}{y-1})" in h_set.union(hh_set) or f"({x-1}{y})-({x-1}{y-1})" in h_set.union(hh_set):
                         # print('left', h_set)
                         # print('skipping', f"({x+1}{y})-({x+1}{y-1})", f"({x-1}{y})-({x-1}{y-1})")
-                        # h_set.add(f"({x}{y})-({x}{y-1})")
+                        hh_set.add(f"({x}{y})-({x}{y-1})")
                         pass
                     else:
                         h_set.add(f"({x}{y})-({x}{y-1})")
                         fences += 1
 
-            print("vertical", v_set)
-            print("horizontal", h_set)
-            res += len(value[set_idx]) * fences
+            #     print("vertical", v_set)
+            #     print("horizontal", h_set)
+            # print("vertical", v_set)
+            # print("horizontal", h_set)
+            print(f'sides of {key} is {fences} * {len(value[set_idx])}area = ', fences * len(value[set_idx]))
+
+            # i was stuck for a while even though i had the right solution
+            # the problem was, each plot of garden were being processed randomly because i was using a set
+            # fixed this by sorting them first by x, then by y
+            res += fences * len(value[set_idx])
 
     print(regions)
     return res
 
 if __name__ == "__main__":
 
-    with open('2024/testinput.txt') as f:
+    with open('2024/input.txt') as f:
         input = [line.strip('\n') for line in f.readlines()]
     
     print(solve_star_1(input))
