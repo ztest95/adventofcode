@@ -5,39 +5,35 @@ from PIL import Image
 
 def solve_star_1(input: list[str]) -> int:
     # solution idea:
-    
-    res = 0
+    # just multiply the sec to velocity to get final displacement 
+    # and then get the coord by using modulo to row & col, to get remainder
 
-    ## example:
-    # SECS = 5
-    # COL_MAX = 11
-    # ROW_MAX = 7
+    res = 0
 
     SECS = 100
     COL_MAX = 101
     ROW_MAX = 103
     q1, q2, q3, q4 = 0, 0, 0, 0
     for line_idx in range(len(input)):
-        p, v = input[line_idx].split(' ')
-        p = tuple(map(int, re.findall(r'\d+,\d+', p)[0].split(',')))
-        v = tuple(map(int, re.findall(r'-?\d+,-?\d+', v)[0].split(',')))
-        print(p, v, end=" ")
+        pos, vel = input[line_idx].split(' ')
+        pos = tuple(map(int, re.findall(r'\d+,\d+', pos)[0].split(',')))
+        vel = tuple(map(int, re.findall(r'-?\d+,-?\d+', vel)[0].split(',')))
 
-        p = ((p[0] + (v[0] * SECS)) , (p[1] + (v[1] * SECS)))
-        p = ((p[0] % COL_MAX) , (p[1] % ROW_MAX))
+        pos = ((pos[0] + (vel[0] * SECS)) , (pos[1] + (vel[1] * SECS))) # add pos with distance * time 
+        pos = ((pos[0] % COL_MAX) , (pos[1] % ROW_MAX)) # get remainder (board coordinate)
         
-        if p[0] == COL_MAX // 2 or p[1] == ROW_MAX // 2:
+        if pos[0] == COL_MAX // 2 or pos[1] == ROW_MAX // 2: # disregard pos on the centers
             continue
-        elif p[0] < COL_MAX // 2:
-            if p[1] < ROW_MAX // 2:
-                q1 += 1
-            else:
-                q4 += 1
-        else:
-            if p[1] < ROW_MAX // 2:
+        elif pos[0] < COL_MAX // 2: 
+            if pos[1] < ROW_MAX // 2:
                 q2 += 1
             else:
                 q3 += 1
+        else:
+            if pos[1] < ROW_MAX // 2:
+                q1 += 1
+            else:
+                q4 += 1
 
         # determine quadrant
 
@@ -55,15 +51,10 @@ def solve_star_2(input: list[str]) -> int:
     # and decided to use save each arr as image
     res = 0
 
-    ## example:
-    # SECS = 5
-    # COL_MAX = 11
-    # ROW_MAX = 7
-
     SECS = 100
     COL_MAX = 101
     ROW_MAX = 103
-    q1, q2, q3, q4 = 0, 0, 0, 0
+
     for line_idx in range(len(input)):
         p, v = input[line_idx].split(' ')
         p = tuple(map(int, re.findall(r'\d+,\d+', p)[0].split(',')))
@@ -71,46 +62,28 @@ def solve_star_2(input: list[str]) -> int:
         input[line_idx] = [p, v]
         
     for i in range(9999):
-        q1, q2, q3, q4 = 0, 0, 0, 0
-        sset = set()
-
-        board = []  
-        for x in range(COL_MAX):
-            line = []
-
-            for y in range(ROW_MAX):
-                line.append(False)
-
-            board.append(line)
+        positions = set()
+        # Create Board
+        board = [ [False] * ROW_MAX for _ in range(COL_MAX) ]
         
         for x in range(len(input)):
-            p = input[x][0]
-            v = input[x][1]
+            pos = input[x][0]
+            vel = input[x][1]
 
-            p = ((p[0] + (v[0])) % COL_MAX , (p[1] + (v[1])) % ROW_MAX)
-            input[x] = [p, v]
-            # print(p)
-            sset.add(p)
+            pos = ((pos[0] + vel[0]) % COL_MAX , (pos[1] + vel[1]) % ROW_MAX)
+            input[x] = [pos, vel]
+            positions.add(pos)
 
-            if p[0] < COL_MAX // 2:
-                if p[1] < ROW_MAX // 2:
-                    q1 += 1
-                else:
-                    q4 += 1
-            else:
-                if p[1] < ROW_MAX // 2:
-                    q2 += 1
-                else:
-                    q3 += 1
-
-        for coord in sset:
+        for coord in positions:
             board[coord[0]][coord[1]] = True
 
-        np_arr = board
-        image_arr = np.where(np_arr, 255, 0).astype(np.uint8)
-        
-        img = Image.fromarray(image_arr , 'L')
-        img.save(f"output_{i}.png")
+        # Save Images
+        # np_arr = np.array(board)
+        # image_arr = np.where(np_arr, 255, 0).astype(np.uint8)
+        # img = Image.fromarray(image_arr , 'L')
+        # img.save(f"output_{i+1}.png")
+
+    return None
 
 if __name__ == "__main__":
 
