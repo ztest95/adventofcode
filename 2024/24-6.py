@@ -159,9 +159,6 @@ def solve_star_2(input: list[str]) -> int:
 
         next = input[forward[0]][forward[1]]
 
-        for x in input:
-            print(''.join(x))
-        print(blocks, forward, curr_idx)
         # if current position not visited
         if input[curr_idx[0]][curr_idx[1]] == '.' or input[curr_idx[0]][curr_idx[1]] in faces_set:
             blocks += 1 
@@ -169,7 +166,6 @@ def solve_star_2(input: list[str]) -> int:
         # do nothing if already visited
 
         elif input[curr_idx[0]][curr_idx[1]] == 'X':
-            print("VISITED", curr_idx)
             loop_curr_idx = (curr_idx[0], curr_idx[1])    # save the current index
             loop_face = (init_face + 1) % 4 # change face
             
@@ -191,24 +187,18 @@ def solve_star_2(input: list[str]) -> int:
             not_a_loop = False
             # After this, guard is temporary rotated
             # Standing at the intersection block, and Next block is the forward block
-            print("CURRENTLY AT", loop_curr_idx, "NEXT", loop_forward)
             while loop_forward != curr_idx and not not_a_loop:
-                print("loop_curr_index", loop_curr_idx, "loop_next", loop_forward)
                 loop_next = input[loop_forward[0]][loop_forward[1]]
                 if loop_next == ".":
                     not_a_loop = True
                     break
 
                 if loop_next == "#":
-                    print("NEXT BLOCK IS WALL ENCOUNTERD")
-                    print('curr', loop_curr_idx, 'next', loop_forward)
                     loop_face = (loop_face + 1) % 4 # rorate
                     # get the next block
 
                     loop_curr_idx = loop_forward
-                    # input[loop_curr_idx[0]][loop_curr_idx[1]] = '|'
-                    print("LOOP_FACE", faces[loop_face])
-                    print("LOOP FORWARD", loop_forward) 
+
                     if loop_face == 0:  
                         loop_j += 1
                         loop_i -= 1
@@ -223,7 +213,6 @@ def solve_star_2(input: list[str]) -> int:
                         loop_j -= 1
                     
                     loop_forward = (loop_i, loop_j)
-                    print("NEW LOOP FORWARD", loop_forward)
                     continue
                 
                 loop_curr_idx = loop_forward
@@ -243,11 +232,8 @@ def solve_star_2(input: list[str]) -> int:
                     loop_j -= 1
 
                 loop_forward = (loop_i, loop_j)
-            print("VISITED STILL", curr_idx)
-            print("LOOP CURR IDX", loop_curr_idx)
-            print("=====================================")
+
             if not not_a_loop:
-                print("LOOP FOUND")
                 loops += 1
  
 
@@ -292,7 +278,7 @@ def solve_star_2(input: list[str]) -> int:
 
 if __name__ == "__main__":
 
-    with open('2024/testinput.txt') as f:
+    with open('2024/input.txt') as f:
         input = [line.strip('\n') for line in f.readlines()]
     x = input.copy()
     print(solve_star_1(input))

@@ -101,7 +101,7 @@ def solve_star_2(input: list[str]) -> int:
 
 if __name__ == "__main__":
 
-    with open('2024/testinput.txt') as f:
+    with open('2024/input.txt') as f:
         input = [line.strip('\n') for line in f.readlines()]
 
     print(solve_star_1(input))
