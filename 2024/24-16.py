@@ -1,76 +1,90 @@
+import time
+
 def solve_star_1(input: list[str]) -> int:
     # solution idea:
-    # simple dfs
+    # simple dfs - max recursion dept
+    # use loop when moving forward, recurse only when intersection
 
     res = 0
     
     S = 0, 0
     for x in range(len(input)):
+        input[x] = list(input[x])
         for y in range(len(input[x])):
             if input[x][y] == "S":
                 S = x, y
 
-    res = dfs(S, None, -1, set())
+    q = input.copy( )
+    res = dfs(S, (S[0], S[1]-1), -1, set(), q)
         
 
     return res
 
-def dfs(coord: tuple, prev: tuple, minn: int, visi: set):
-    x = coord[0]
-    y = coord[1]
-    
+def dfs(coord: tuple, prev: tuple, minn: int, visi: set, input):
+    x, y = coord[0], coord[1]
 
-    minn += 1
+
+    # print("CHANGED DIRECTION", prev, "->", coord)
+    # print("================")
+    copy = input.copy()
+    # for l in copy:
+    #     print("".join(l))
+    # print(minn)
+    # print("================")
+
+
     visited = visi.copy()
     # found end
-    if input[x][y] == "E":
-        return minn
-
+    copy[x][y] = "X"
     visited.add((x, y))
 
     mins = set()
-    ss = False
-    if input[x-1][y] != "#" and (x-1, y) not in visited: # top
-        if prev != "bottom":
-            ss = ((dfs((x-1, y), "bottom", minn + 1000, visited)))
-        else:
-            ss = ((dfs((x-1, y), "bottom", minn, visited)))
-
-        if ss:
-            mins.add(ss)
-
-    if input[x][y+1] != "#" and (x, y+1) not in visited: # right
-        if prev != "left":
-            ss = ((dfs((x, y+1), "left", minn + 1000, visited)))
-        else:
-            ss = (dfs((x, y+1), "left", minn, visited))
-
-        if ss:
-            mins.add(ss)
-
-    if input[x+1][y] != "#" and (x+1, y) not in visited: # bottom
-        if prev != "top":
-            ss = (dfs((x+1, y), "top", minn + 1000, visited))
-        else:
-            ss =  (dfs((x+1, y), "top", minn, visited))
-
-        if ss: 
-            mins.add(ss)
-
-    if input[x][y-1] != "#" and (x, y-1) not in visited: #left
-        if prev != "right":
-            ss = (dfs((x, y-1), "right", minn + 1000, visited))
-        else:
-            ss = mins.add(dfs((x, y-1), "right", minn, visited))
+    prev_x = prev[0]
+    prev_y = prev[1]
+    tt = False
+    while input[x][y] != "#":
+        # time.sleep(.1)
+        minn += 1
         
-        if ss:
-            mins.add(ss)
+        if input[x][y] == "E":
+            # print("FOUND E", minn)
+            return minn
+        
+        visited.add((x, y))
+        copy[x][y] = "X"
+        # check for intersection at every step
+        dirs = {(x-1, y), (x, y+1), (x+1, y), (x, y-1)}
+        # prev coord - curr coord = backward direction
+        # curr coord - prev coord = forward direction
+        dirs.remove((prev_x, prev_y)) # remove prev, dont recurse
+        forward = (x - prev_x, y - prev_y)
+        dirs.remove((x + forward[0], y + forward[1])) # remove recurse on next, it will be on next iter
+
+        for xx, yy in dirs:
+            if input[xx][yy] != "#" and (xx, yy) not in visited:
+                mins.add(dfs((xx, yy), (x, y), minn + 1000, visited, copy.copy()))
+        # print("================")
+        # for l in copy:
+        #     print("".join(l))
+        # print(minn)
+        # print("================")
+
+        prev_x = x
+        prev_y = y
+        x += forward[0]
+        y += forward[1]
 
     if mins:
         minn = min(mins)
         return minn
 
-    return 0
+    if tt:
+        # print("FOUND E", minn)
+        return minn
+    else:
+        return 9 ** 10
+
+    return minn
 
 def solve_star_2(input: list[str]) -> int:
     # solution idea
