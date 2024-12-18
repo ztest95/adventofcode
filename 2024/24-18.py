@@ -63,9 +63,22 @@ def bfs(grid: list, wall: set, coord: tuple, steps: int) -> int:
 
 
 def solve_star_2(input: list[str]) -> int:
-    # solution idea
+    # solution idea:
+    # brute force every iter
 
     res = 0
+
+    mapp = [[0] * GRID_SIZE for _ in range(GRID_SIZE)]
+    walls = set()
+    for i in range(len(input)): # use entire input
+        print(i)
+        x, y = tuple(map(int, input[i].split(",")))
+        mapp[x][y] = 1
+        walls.add((x, y))
+
+        if bfs(mapp, walls, (0, 0), 0) == -1: # find drop that closes path
+            res = (x, y)
+            break
 
     return res
 
